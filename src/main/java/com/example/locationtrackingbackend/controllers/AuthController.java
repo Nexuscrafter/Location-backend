@@ -46,30 +46,21 @@ public class AuthController {
     public ResponseEntity<AuthResponse> createUserHandler(
             @RequestBody User user) throws UserException {
 
-        String email = user.getEmail();
-        String password = user.getPassword();
-        String fullName = user.getFullName();
-        String phoneNumber = user.getPhoneNumber();
-        String role = user.getRole();
-        String address = user.getAddress();
 
-        User isEmailExist = userRepository.findByEmail(email);
+        User isEmailExist = userRepository.findByEmail(user.getEmail());
 
         if (isEmailExist!=null) {
 
             throw new UserException("User with same Email Already Exist");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Create new user
-        User createdUser = new User();
-        createdUser.setEmail(email);
-        createdUser.setFullName(fullName);
-        createdUser.setPhoneNumber(phoneNumber);
-        createdUser.setPassword(passwordEncoder.encode(password));
-        createdUser.setAddress(address);
-        createdUser.setRole(role);
+        if (user.getRole() == null || user.getRole().isBlank()) {
+            user.setRole("USER");
+        }
 
-        User savedUser = userRepository.save(createdUser);
+
+        userRepository.save(user);
 
 
 

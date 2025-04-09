@@ -38,7 +38,7 @@ public class User {
 
     private String address;
 
-    private String role = "USER";
+    private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
